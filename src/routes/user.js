@@ -2,8 +2,16 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { registerSchema, loginSchema } from "../schemas/auth.js";
 import { registerUser, loginUser } from "../services/user.js";
+import { jwt } from "hono/jwt";
+
+const authMiddleware = jwt({ secret: process.env.DB_JWT_SECRET });
 
 const userRoutes = new Hono();
+
+userRoutes.get("/profile", authMiddleware, (c) => {
+  const user = c.get("jwtPayload");
+  return c.json({ message: "加密通行證", user });
+});
 
 // 註冊
 userRoutes.post(
@@ -37,7 +45,10 @@ userRoutes.post(
   //  插入登錄驗證中間件
   zValidator("json", loginSchema, (result, c) => {
     if (!result.success) {
-      return c.json({ error: result.error.errors[0].message }, 400);
+      return c.json(
+        { error: result.error?.errors?.[0]?.message || "輸入格式錯誤" },
+        400,
+      );
     }
   }),
   async (c) => {
@@ -47,6 +58,7 @@ userRoutes.post(
 
       return c.json({ message: "登入成功", user }, 200);
     } catch (error) {
+      console.error("登錄失敗詳情:", error.message);
       if (error.message === "用戶名不存在或密碼不正確") {
         return c.json({ error: "用戶名或密碼錯誤" }, 401);
       }
