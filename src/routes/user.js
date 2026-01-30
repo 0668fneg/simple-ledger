@@ -4,7 +4,10 @@ import { registerSchema, loginSchema } from "../schemas/auth.js";
 import { registerUser, loginUser } from "../services/user.js";
 import { jwt } from "hono/jwt";
 
-const authMiddleware = jwt({ secret: process.env.DB_JWT_SECRET });
+const authMiddleware = jwt({
+  secret: process.env.DB_JWT_SECRET || "fallback_secret_for_debug",
+  alg: "HS256",
+});
 
 const userRoutes = new Hono();
 
