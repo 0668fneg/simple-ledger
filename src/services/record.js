@@ -6,3 +6,10 @@ export const addRecord = async (recordData) => {
   }
   return await recordRepository.createRecord(recordData);
 };
+
+export const getRecordsByUserId = async (userId) => {
+  if (!userId) throw new Error("無效的userId");
+
+  const result = await recordRepository.findRecordsByUserId(userId);
+  return result;
+};
