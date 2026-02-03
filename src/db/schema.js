@@ -6,6 +6,7 @@ import {
   timestamp,
   integer,
   varchar,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -14,12 +15,14 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
 });
 
+export const recordTypeEnum = pgEnum("record_type", ["income", "expense"]);
+
 export const records = pgTable("records", {
   id: serial("id").primaryKey(),
   userId: integer("user_id")
     .references(() => users.id)
     .notNull(),
-  type: varchar("type", { length: 10 }).notNull(),
+  type: recordTypeEnum("type").notNull(),
   amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
   category: varchar("category", { length: 50 }),
   content: text("content"),

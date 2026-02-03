@@ -14,6 +14,16 @@ recordRoutes.post("/", authMiddleware, async (c) => {
   try {
     const payload = c.get("jwtPayload");
     const body = await c.req.json();
+    const validTypes = ["income", "expense"];
+    if (!validTypes.includes(body.type)) {
+      return c.json(
+        {
+          success: false,
+          message: "格式不符!類型必須爲'income' 或 'expense' ",
+        },
+        400,
+      );
+    }
 
     const newRecord = await recordService.addRecord({
       ...body,
