@@ -39,4 +39,19 @@ recordRoutes.get("/", authMiddleware, async (c) => {
   }
 });
 
+//
+recordRoutes.get("/stats", authMiddleware, async (c) => {
+  const userId = c.get("jwtPayload").id;
+
+  const year = parseInt(c.req.query("year") || "2026");
+  const month = parseInt(c.req.query("month") || "2");
+
+  const stats = await recordService.getMonthlyStats(userId, year, month);
+
+  return c.json({
+    success: true,
+    data: stats,
+  });
+});
+
 export default recordRoutes;

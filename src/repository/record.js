@@ -1,6 +1,6 @@
 import { db } from "../db/index.js";
 import { records } from "../db/schema.js";
-import { eq, desc } from "drizzle-orm";
+import { eq, and, gte, lte } from "drizzle-orm";
 
 // 增加
 export const createRecord = async (data) => {
@@ -24,4 +24,18 @@ export const findRecordsByUserId = async (userId) => {
     .from(records)
     .where(eq(records.userId, userId));
   return result;
+};
+
+// 查詢當月總賬
+export const findMonthlyRecords = async (userId, startDate, endDate) => {
+  return await db
+    .select()
+    .from(records)
+    .where(
+      and(
+        eq(records.userId, userId),
+        gte(records.createdAt, startDate),
+        lte(records.createdAt, endDate),
+      ),
+    );
 };
