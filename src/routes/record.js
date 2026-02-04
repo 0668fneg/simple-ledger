@@ -24,6 +24,16 @@ recordRoutes.post("/", authMiddleware, async (c) => {
         400,
       );
     }
+    const amountNum = parseFloat(body.amount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      return c.json(
+        {
+          success: false,
+          message: "金額必須大於 0 ",
+        },
+        400,
+      );
+    }
 
     const newRecord = await recordService.addRecord({
       ...body,
