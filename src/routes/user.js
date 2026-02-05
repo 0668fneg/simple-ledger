@@ -57,9 +57,9 @@ userRoutes.post(
   async (c) => {
     try {
       const body = c.req.valid("json");
-      const user = await loginUser(body);
+      const result = await loginUser(body);
 
-      return c.json({ message: "登入成功", user }, 200);
+      return c.json({ message: "登入成功", ...result }, 200);
     } catch (error) {
       console.error("登錄失敗詳情:", error.message);
       if (error.message === "用戶名不存在或密碼不正確") {

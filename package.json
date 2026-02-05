@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,7 @@
     "pg": "^8.17.2"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.8"
+    "drizzle-kit": "^0.31.8",
+    "vitest": "^4.0.18"
   }
 }
